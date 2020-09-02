@@ -1,0 +1,45 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h5>LATEST ANNOUNCEMENTS :</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary btn-sm btn-block" href="">Add Announcement</a>
+			<table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>Type</th>
+					<th>Date</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h5>LATEST MEMBERS :</h5>
+		<hr>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>Member</th>
+					<th>Phone Number</th>
+					<th>University</th>
+				</tr>
+
+				{% for i in members %}
+					<tr>
+						<td>{{i.name}}</td>
+						<td>{{i.phone}}</td>
+						<td>{{i.college}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
