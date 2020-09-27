@@ -5,7 +5,48 @@
 <br>
 
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-2">
+		<h5>GAMES :</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary btn-sm btn-block" href="{% url 'add_game' %}">Add Game</a>
+			<table class="table table-sm">
+				<tr>
+					<th>Games</th>
+				</tr>
+
+				{% for i in games %}
+					<tr>
+						<td>{{i.name}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<h5>LATEST MEMBERS :</h5>
+		<hr>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>Member</th>
+					<th>Phone Number</th>
+					<th>University</th>
+					<th></th>
+				</tr>
+
+				{% for i in members %}
+					<tr>
+						<td>{{i.name}}</td>
+						<td>{{i.phone}}</td>
+						<td>{{i.college}}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'profile' i.id %}">View</a></td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	<div class="col-md-4">
 		<h5>LATEST ANNOUNCEMENTS :</h5>
 		<hr>
 		<div class="card card-body">
@@ -16,30 +57,17 @@
 					<th>Type</th>
 					<th>Date</th>
 				</tr>
-			</table>
-		</div>
-	</div>
-
-	<div class="col-md-7">
-		<h5>LATEST MEMBERS :</h5>
-		<hr>
-		<div class="card card-body">
-			<table class="table table-sm">
-				<tr>
-					<th>Member</th>
-					<th>Phone Number</th>
-					<th>University</th>
-				</tr>
-
-				{% for i in members %}
+				{% for i in announcements %}
 					<tr>
-						<td>{{i.name}}</td>
-						<td>{{i.phone}}</td>
-						<td>{{i.college}}</td>
+						<td>{{i.typ}}</td>
+						<td>{{i.date_created}}</td>
 					</tr>
 				{% endfor %}
 			</table>
 		</div>
 	</div>
+</div>
+<div class="row">
+	
 </div>
 {% endblock %}
