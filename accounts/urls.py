@@ -12,6 +12,8 @@ urlpatterns = [
     path('delete_tier/<str:pk_item>/',views.deleteTier, name="delete_tier"),
 
     path('add_game/',views.newGame, name="add_game"),
+    path('add_member/',views.newMember, name="add_member"),
+    path('delete_member/<str:pk_member>/',views.deleteMember, name="delete_member"),
 
     path('register/', views.registerPage, name = "register"),
     path('login/', views.loginPage, name = "login"),

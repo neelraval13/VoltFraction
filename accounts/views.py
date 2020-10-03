@@ -57,19 +57,31 @@ def loginPage(request):
 	return render(request,'accounts/login.html', context)
 
 def logoutUser(request):
+	logout(request=request)
 	return redirect('login')
 
 
 def home(request):
-	members= Member.objects.all()
-	games = Game.objects.all()
-	announcements = Announcement.objects.all()
+	if (request.user.is_authenticated):
+		if(request.user.is_staff):
+			members= Member.objects.all()
+		else:
+			members = Member.objects.filter(college = request.user.first_name)
+		games = Game.objects.all()
+		announcements = Announcement.objects.all()
 
-	q = {'members':members, 'games':games, 'announcements':announcements}
-	return render(request,'accounts/dashboard.html', q);
+		q = {'members':members, 'games':games, 'announcements':announcements}
+		return render(request,'accounts/dashboard.html', q);
+	else:
+		return loginPage(request=request)
 
 def members(request):
-	return render(request,'accounts/members.html');
+	if(request.user.is_staff):
+		members= Member.objects.all()
+	else:
+		members = Member.objects.filter(college = request.user.first_name)
+	context = {'members':members}
+	return render(request,'accounts/members.html',context);
 
 def profile(request, pk_test):
 	member = Member.objects.get(id=pk_test)
@@ -121,12 +133,35 @@ def deleteTier(request,pk_item):
 	return render(request, 'accounts/delete.html', context)
 
 def newGame(request):
-	form = GamesForm()
+	form = GameForm()
 	if request.method == 'POST':
-		form = GamesForm(request.POST)
+		form = GameForm(request.POST)
 		if form.is_valid():
 			form.save()
 			return redirect('/')
 
 	context = {'form':form}
 	return render(request, 'accounts/add_game.html', context)
+
+def newMember(request):
+	college = request.user.first_name
+	form = MemberForm(initial={'college':college})
+	if request.method == 'POST':
+		form = MemberForm(request.POST)
+		if form.is_valid():
+			form.save(request)
+			return redirect('/')
+
+	context = {'form':form}
+	return render(request, 'accounts/add_member.html', context)
+
+def deleteMember(request,pk_member):
+
+	member=Member.objects.get(id=pk_member)
+	pk_test = member.id
+	if request.method == "POST":
+		member.delete()
+		return redirect('members')
+
+	context={'member':member}
+	return render(request, 'accounts/delete_member.html', context)

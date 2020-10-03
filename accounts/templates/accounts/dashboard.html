@@ -3,13 +3,15 @@
 {% block content %}
 
 <br>
-
 <div class="row">
-	<div class="col-md-2">
+	<div class="col-md-1"></div>
+	<div class="col-md-4">
 		<h5>GAMES :</h5>
 		<hr>
 		<div class="card card-body">
+			{% if request.user.is_staff %}
 			<a class="btn btn-primary btn-sm btn-block" href="{% url 'add_game' %}">Add Game</a>
+			{% endif %}
 			<table class="table table-sm">
 				<tr>
 					<th>Games</th>
@@ -46,7 +48,7 @@
 			</table>
 		</div>
 	</div>
-	<div class="col-md-4">
+	<!-- <div class="col-md-4">
 		<h5>LATEST ANNOUNCEMENTS :</h5>
 		<hr>
 		<div class="card card-body">
@@ -65,7 +67,7 @@
 				{% endfor %}
 			</table>
 		</div>
-	</div>
+	</div> -->
 </div>
 <div class="row">
 	

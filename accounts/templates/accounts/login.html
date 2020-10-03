@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     
@@ -14,13 +15,15 @@
 			margin: 0;
 			padding: 0;
 			height: 100%;
-			background: #7abecc !important;
+			background-image: url("{% static 'images/WP.jpg' %}") !important;
+			background-position: center;
 		}
 		.user_card {
 			width: 350px;
 			margin-top: auto;
 			margin-bottom: auto;
-			background: #74cfbf;
+			background: rgb(88,0,212);
+			background: linear-gradient(180deg, rgba(88,0,212,1) 0%, rgba(113,5,119,1) 41%, rgba(0,0,0,1) 100%);
 			position: relative;
 			display: flex;
 			justify-content: center;
@@ -44,8 +47,8 @@
 
 		.login_btn {
 			width: 100%;
-			background: #33ccff !important;
-			color: white !important;
+			background: #EAF717 !important;
+			color: black !important;
 		}
 		.login_btn:focus {
 			box-shadow: none !important;
@@ -55,8 +58,8 @@
 			padding: 0 2rem;
 		}
 		.input-group-text {
-			background: #f7ba5b !important;
-			color: white !important;
+			background: #EAF717 !important;
+			color: black !important;
 			border: 0 !important;
 			border-radius: 0.25rem 0 0 0.25rem !important;
 		}
@@ -65,10 +68,39 @@
 			box-shadow: none !important;
 			outline: 0px !important;
 		}
+		.a:link {
+		  color: green;
+		  background-color: transparent;
+		  text-decoration: none;
+		}
+
+		.a:visited {
+		  color: yellow;
+		  background-color: transparent;
+		  text-decoration: none;
+		}
+
+		.a:hover {
+		  color: white;
+		  background-color: transparent;
+		  text-decoration: underline;
+		}
+
+		.a:active {
+		  color: yellow;
+		  background-color: transparent;
+		  text-decoration: underline;
+		}
+
+		.textlink {
+		  color: #E7E6E6;
+		  background-color: transparent;
+		  text-decoration: none;
+		}
 
 		#messages{
-			background-color: grey;
-			color: #fff;
+			background-color: #B82204;
+			color: #EAF717;
 			padding: 10px;
 			margin-top: 10px;
 		}
@@ -112,8 +144,8 @@
 				{% endfor %}
 		
 				<div class="mt-4">
-					<div class="d-flex justify-content-center links">
-						Don't have an account? <a href="{% url 'register' %}" class="ml-2">Sign Up</a>
+					<div class="d-flex justify-content-center textlink">
+						Don't have an account? <a href="{% url 'register' %}" class="a">Sign Up</a>
 					</div>
 			
 				</div>

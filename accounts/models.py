@@ -18,12 +18,18 @@ class University(models.Model):
 
 class Member(models.Model):
 
-	name = models.CharField(max_length=200, null=True)
+	name = models.CharField(max_length=200, null=True, unique = True)
 	#college = models.ForeignKey(University, null=True, on_delete=models.CASCADE)
 	college = models.CharField(max_length=200, null=True)
-	phone = models.CharField(max_length=200, null=True)
+	email = models.EmailField(max_length=255, null=True,unique=True)
+	phone = models.CharField(max_length=200, null=True, unique = True)
 
 	date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+	@classmethod
+	def create(self, name, email=None, college=None, phone=None):
+		member=self(name=name, email=email, college=college,phone=phone)
+		return member
 
 	def __str__(self):
 		return self.name
