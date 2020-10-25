@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    
+	
 <head>
 	<title>Login</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -18,79 +18,165 @@
 			background-image: url("{% static 'images/WP.jpg' %}") !important;
 			background-position: center;
 		}
-		.user_card {
-			width: 350px;
-			margin-top: auto;
-			margin-bottom: auto;
-			background: rgb(88,0,212);
-			background: linear-gradient(180deg, rgba(88,0,212,1) 0%, rgba(113,5,119,1) 41%, rgba(0,0,0,1) 100%);
-			position: relative;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			padding: 10px;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			border-radius: 5px;
 
-		}
+			.login-box {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 400px;
+				padding: 40px;
+				transform: translate(-50%, -50%);
+				background: rgba(0,0,0,.5);
+				box-sizing: border-box;
+				box-shadow: 0 15px 25px rgba(0,0,0,.6);
+				border-radius: 10px;
+			}
 
-		.form_container {
-			margin-top: 20px;
-		}
+			.login-box h2 {
+				margin: 0 0 30px;
+				padding: 0;
+				color: #fff;
+				text-align: center;
+			}
 
-		#form-title{
-			color: #fff;
-			
-		}
+			.login-box .user-box {
+				position: relative;
+			}
 
-		.login_btn {
-			width: 100%;
-			background: #EAF717 !important;
-			color: black !important;
-		}
-		.login_btn:focus {
-			box-shadow: none !important;
-			outline: 0px !important;
-		}
-		.login_container {
-			padding: 0 2rem;
-		}
-		.input-group-text {
-			background: #EAF717 !important;
-			color: black !important;
-			border: 0 !important;
-			border-radius: 0.25rem 0 0 0.25rem !important;
-		}
-		.input_user,
-		.input_pass:focus {
-			box-shadow: none !important;
-			outline: 0px !important;
-		}
-		.a:link {
-		  color: green;
-		  background-color: transparent;
-		  text-decoration: none;
-		}
+			.login-box .user-box input {
+				width: 100%;
+				padding: 10px 0;
+				font-size: 16px;
+				color: #fff;
+				margin-bottom: 30px;
+				border: none;
+				border-bottom: 1px solid #fff;
+				outline: none;
+				background: transparent;
 
-		.a:visited {
-		  color: yellow;
-		  background-color: transparent;
-		  text-decoration: none;
-		}
+			}
+			.login-box .user-box label {
+				position: absolute;
+				top:0;
+				left: 0;
+				padding: 10px 0;
+				font-size: 16px;
+				color: #fff;
+				pointer-events: none;
+				transition: .5s;
+			}
 
-		.a:hover {
-		  color: white;
-		  background-color: transparent;
-		  text-decoration: underline;
-		}
+			.login-box .user-box input:focus ~ label,
+			.login-box .user-box input:valid ~ label {
+				top: -40px;
+				left: 0;
+				color: #03e9f4;
+				font-size: 20px;
+			}
 
-		.a:active {
-		  color: yellow;
-		  background-color: transparent;
-		  text-decoration: underline;
-		}
+			.login-box form a {
+				position: relative;
+				display: inline-block;
+				padding: 10px 20px;
+				color: #03e9f4;
+				font-size: 16px;
+				text-decoration: none;
+				text-transform: uppercase;
+				overflow: hidden;
+				transition: .5s;
+				margin-top: 40px;
+				letter-spacing: 4px
+			}
+
+			.login-box a:hover {
+				background: #03e9f4;
+				color: #fff;
+				border-radius: 5px;
+				box-shadow: 0 0 5px #03e9f4,
+							0 0 25px #03e9f4,
+							0 0 50px #03e9f4,
+							0 0 100px #03e9f4;
+			}
+
+			.login-box a span {
+				position: absolute;
+				display: block;
+			}
+
+			.login-box a span:nth-child(1) {
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 2px;
+				background: linear-gradient(90deg, transparent, #03e9f4);
+				animation: btn-anim1 1s linear infinite;
+			}
+
+			@keyframes btn-anim1 {
+				0% {
+					left: -100%;
+				}
+				50%,100% {
+					left: 100%;
+				}
+			}
+
+			.login-box a span:nth-child(2) {
+				top: -100%;
+				right: 0;
+				width: 2px;
+				height: 100%;
+				background: linear-gradient(180deg, transparent, #03e9f4);
+				animation: btn-anim2 1s linear infinite;
+				animation-delay: .25s
+			}
+
+			@keyframes btn-anim2 {
+				0% {
+					top: -100%;
+				}
+				50%,100% {
+					top: 100%;
+				}
+			}
+
+			.login-box a span:nth-child(3) {
+				bottom: 0;
+				right: -100%;
+				width: 100%;
+				height: 2px;
+				background: linear-gradient(270deg, transparent, #03e9f4);
+				animation: btn-anim3 1s linear infinite;
+				animation-delay: .5s
+			}
+
+			@keyframes btn-anim3 {
+				0% {
+					right: -100%;
+				}
+				50%,100% {
+					right: 100%;
+				}
+			}
+
+			.login-box a span:nth-child(4) {
+				bottom: -100%;
+				left: 0;
+				width: 2px;
+				height: 100%;
+				background: linear-gradient(360deg, transparent, #03e9f4);
+				animation: btn-anim4 1s linear infinite;
+				animation-delay: .75s
+			}
+
+			@keyframes btn-anim4 {
+				0% {
+					bottom: -100%;
+				}
+				50%,100% {
+					bottom: 100%;
+				}
+			}
 
 		.textlink {
 		  color: #E7E6E6;
@@ -99,8 +185,8 @@
 		}
 
 		#messages{
-			background-color: #B82204;
-			color: #EAF717;
+			background: linear-gradient(0deg, transparent, #03e9f4);
+			color: white;
 			padding: 10px;
 			margin-top: 10px;
 		}
@@ -110,45 +196,39 @@
 <body>
 	<div class="container h-100">
 		<div class="d-flex justify-content-center h-100">
-			<div class="user_card">
-				<div class="d-flex justify-content-center">
+			<div class="login-box">
 
-
-					<h3 id="form-title">LOGIN</h3>
-				</div>
-				<div class="d-flex justify-content-center form_container">
-					<form method="POST" action="">
+					<h2>LOGIN</h2>
+					<form method="POST" action="." autocomplete="off">
 						{% csrf_token %}
-						<div class="input-group mb-3">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-user"></i></span>
-							</div>
-							<input type="text" name="username" placeholder="Username..." class="form-control">
+						<div class="user-box">
+							<input type="text" name="username" default="">
+							<label>Username</label>
 						</div>
-						<div class="input-group mb-2">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
-							</div>
-								<input type="password" name="password" placeholder="Password..." class="form-control" >
+						<div class="user-box">
+								<input type="password" name="password" default="">
+							<label>Password</label>
 						</div>
-
-							<div class="d-flex justify-content-center mt-3 login_container">
-				 				<input class="btn login_btn" type="submit" value="Login">
-				   			</div>
+						{% for message in messages %}
+							<p id="messages">{{message}}</p>
+						{% endfor %}
+							<a href="#" onclick="this.closest('form').submit();return false;">
+								<span></span>
+								<span></span>
+								<span></span>
+								<span></span>
+								Submit
+							</a>
+							<a href="{% url 'register' %}">
+								<span></span>
+								<span></span>
+								<span></span>
+								<span></span>
+								Register
+							</a>
 					</form>
-
 				</div>
 
-				{% for message in messages %}
-					<p id="messages">{{message}}</p>
-				{% endfor %}
-		
-				<div class="mt-4">
-					<div class="d-flex justify-content-center textlink">
-						Don't have an account? <a href="{% url 'register' %}" class="a">Sign Up</a>
-					</div>
-			
-				</div>
 			</div>
 		</div>
 	</div>

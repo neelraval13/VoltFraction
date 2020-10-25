@@ -29,7 +29,20 @@ class MemberForm(ModelForm):
 
 
 class CreateUserForm(UserCreationForm):
+	
 	class Meta:
 		model = User 
-		fields = ['username', 'email','first_name' ,'password1', 'password2']
-		
+		fields = ['username' ,'password1', 'password2']
+
+
+class UserUpdateForm(ModelForm):
+	class Meta:
+		model = User 
+		fields = ['username', 'email']
+
+
+class ProfileUpdateForm(ModelForm):
+	class Meta:
+		model = Profile
+		fields = ['phone', 'college', 'adhaar','image']
+			

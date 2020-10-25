@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .forms import *
 from .filters import *
+from django.views.decorators.csrf import csrf_exempt
 
 
 # def createTier(request, pk):
@@ -24,6 +25,21 @@ from .filters import *
 
 	# context = {'formset':formset}
 	# return render(request, 'accounts/forms.html', context)
+
+@csrf_exempt
+def ajax(request):
+	
+	profile = Profile.objects.get(user=request.user)
+	profile.is_apply = True;
+	profile.save()
+	print("Hello")
+	resp = json.dumps(profile)
+	return HttpResponse(resp, conten_type="application/json")
+
+
+def homePage(request):
+	context ={'homePage':"active"}
+	return render(request,'accounts/home.html', context)
 
 def registerPage(request):
 	form = CreateUserForm()
@@ -70,28 +86,60 @@ def home(request):
 		games = Game.objects.all()
 		announcements = Announcement.objects.all()
 
-		q = {'members':members, 'games':games, 'announcements':announcements}
+		q = {'members':members, 'games':games, 'announcements':announcements, 'home':"active"}
 		return render(request,'accounts/dashboard.html', q);
 	else:
 		return loginPage(request=request)
+
+def hierarchy(request):
+	if (request.user.is_authenticated):
+		users = User.objects.filter(is_staff=False)
+
+		context = {'users':users, 'hierarchy':"active"}
+		return render(request,'accounts/hierarchy.html', context);
 
 def members(request):
 	if(request.user.is_staff):
 		members= Member.objects.all()
 	else:
 		members = Member.objects.filter(college = request.user.first_name)
-	context = {'members':members}
+	context = {'members':members, 'member_page':"active"}
 	return render(request,'accounts/members.html',context);
 
 def profile(request, pk_test):
 	member = Member.objects.get(id=pk_test)
 	tiers = Tier.objects.all()
-
 	myFilter = TierFilter(request.GET, queryset=tiers)
 	tiers = myFilter.qs
 
-	context = {'members': member, 'tiers':tiers, 'myFilter': myFilter}
+	context = {'members': member, 'tiers':tiers, 'myFilter': myFilter, 'profile':"active"}
 	return render(request,'accounts/profile.html',context);
+
+def userprofile(request, pk_test):
+	user = User.objects.get(id=pk_test)
+	profile = Profile.objects.get(user=user)
+	members = Member.objects.filter(college=user.first_name)
+	
+
+
+	context = {'user': user, 'profile':profile, 'members': members}
+	return render(request,'accounts/userprofile.html',context);
+
+def updateuser(request, pk_test):
+	user = User.objects.get(id=pk_test)
+	if request.method == 'POST':
+		u_form = UserUpdateForm(request.POST, instance=user)
+		p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user.profile)
+		if u_form.is_valid() and p_form.is_valid():
+			u_form.save()
+			p_form.save()
+			return redirect('userprofile',pk_test=pk_test)
+	else:
+		u_form = UserUpdateForm(instance=user)
+		p_form = ProfileUpdateForm(instance=user.profile)
+
+	context = {'user': user, 'u_form':u_form, 'p_form':p_form}
+	return render(request,'accounts/updateuser.html',context);
 
 def createTier(request, pk):
 	OrderFormSet = inlineformset_factory(Member, Tier, fields = ('game','tierlist','played','won'), extra=3)
