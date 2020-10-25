@@ -1,8 +1,13 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls import url
+from django.conf.urls.static import static
+
 
 
 urlpatterns = [
+    path('ex/', views.homePage, name="homePage"),
     path('', views.home, name="home"),
     path('members/', views.members, name="members"),
     path('profile/<str:pk_test>/', views.profile, name="profile"),
@@ -19,4 +24,12 @@ urlpatterns = [
     path('login/', views.loginPage, name = "login"),
     path('logout/', views.logoutUser, name = "logout"),
 
+    path('hierarchy/', views.hierarchy, name="hierarchy"),
+    path('userprofile/<str:pk_test>/', views.userprofile, name="userprofile"),
+    path('updateuser/<str:pk_test>/', views.updateuser, name="updateuser"),
+    url(r'^apply/$', views.ajax, name='ajax_apply')
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
