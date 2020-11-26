@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from .models import *
 
+
 class GameForm(ModelForm):
 	class Meta:
 		model = Tier 
@@ -27,6 +28,12 @@ class MemberForm(ModelForm):
 								phone=self.cleaned_data['phone'],
 								)
 
+class GamesForm(ModelForm):
+	class Meta:
+		model = Game
+		fields = '__all__'
+		
+
 
 class CreateUserForm(UserCreationForm):
 	
@@ -45,4 +52,37 @@ class ProfileUpdateForm(ModelForm):
 	class Meta:
 		model = Profile
 		fields = ['phone', 'college', 'adhaar','image']
+
+
+class DateInput(forms.DateInput):
+	input_type = 'date'
+
+class TournamentForm(ModelForm):
+	date = forms.DateField(widget = DateInput)
+	class Meta:
+		model = Tournament
+		fields = ['name', 'game','date']
+
+
+class TeamForm(ModelForm):
+	members = forms.ModelMultipleChoiceField(
+            queryset=Member.objects.all(),
+            widget=forms.CheckboxSelectMultiple,
+            required=True)
+	class Meta:
+		model = Team
+		fields = ['name', 'game', 'members']
+
+
+		
+
+class AddTeamForm(ModelForm):
+	teams = forms.ModelMultipleChoiceField(
+            queryset=Team.objects.all(),
+            widget=forms.CheckboxSelectMultiple,
+            required=True)
+	class Meta:
+		model = Tournament
+		fields = ['teams']
+
 			
