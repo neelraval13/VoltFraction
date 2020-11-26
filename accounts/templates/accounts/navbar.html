@@ -8,18 +8,17 @@
     margin-right: 20px;
   }
 
+  .button{
+    margin-right: 20px;
+  }
+
+  .images{
+    height: 50px; 
+  }
+
 </style>
 
-<script>
-    function Apply(){
-      $.ajax({
-        url: '/apply/',
-        type: "POST",
-        success: function (response){
-        }
-      });
-    }
-</script>
+
 
 <nav class="navbar navbar-expand-lg navbar-dark"  style="background-color: #000000;">
   <img src="{% static 'images/new.jpg' %}" class="nav-link" href="{% url 'home' %}" />
@@ -40,7 +39,12 @@
         <a class="nav-link" href="{% url 'hierarchy' %}">Hierarchy<span class="sr-only">(current)</span></a>
       </li>
       {% endif %}
-      <li class="nav-item {{ profile }}">
+      <li class="nav-item {{ teamlist }}">
+        <a class="nav-link" href="{% url 'teamlist' %}">Teams<span class="sr-only">(current)</span></a>
+      </li>
+      
+
+      <li class="nav-item {{ var }}">
         <a class="nav-link" href="{% url 'userprofile' request.user.id %}">Profile<span class="sr-only">(current)</span></a>
       </li>
       <!-- <li class="nav-item">
@@ -49,10 +53,18 @@
     </ul>
   </div>
 
-  <span class="hello-msg">Hello, {{request.user}}
-<!--     {% if not request.user.profile.is_lead or not request.user.profile.is_apply %} -->
-<!--       <span><button type="button" class="btn btn-danger" onclick="Apply();">Apply for Lead</button></span> -->
-<!--     {% endif %} -->
+  <span class="hello-msg">Hello, {{request.user}}</span>
+  {% if not request.user.profile.is_apply and not request.user.profile.is_lead %}
+    <span class="button">
+      <form action="{% url 'apply' %}" method="POST"> 
+        {% csrf_token %}
+        <button type="submit" name = "profile_id" value = "{{request.user.profile.id}}" class="btn btn-warning">Apply for Lead</button>
+        
+      </form>
+    </span>
+  {% endif %}
+
   <span><a class="btn btn-warning" href="{% url 'logout' %}">Logout</a></span>
 
 </nav>
+

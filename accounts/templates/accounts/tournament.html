@@ -1,0 +1,58 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Tournament Details: </h5>
+			<hr>
+			<p>Name: {{tourn.name}}</p>
+			<p>Game: {{tourn.game}}</p>
+			<p>Date: {{tourn.date}}</p>
+			<form action="{% url 'deleteTourn' tourn.id %}" method="POST"> 
+			    {% csrf_token %}
+			    <input class="btn btn-outline-info  btn-sm btn-block" type="submit" value="Delete">
+			</form>
+		</div>
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md">	
+		<h3>TEAMS</h3>
+		<div class="card card-body ex">
+			{% if not tourn.is_add %}
+				<form action="{% url 'addt' %}" method="POST"> 
+			        {% csrf_token %}
+			        <button type="submit" name = "pk" value = "{{ tourn.id }}" class="btn btn-warning">Add Team</button>
+		        
+		      	</form>
+				<table class="table table-sm">
+					<tr>
+						<th>Name : </th>
+						<th></th>
+					</tr>
+					{% for i in tourn.teams.all %}
+						<tr>
+							<td>{{i.name}}</td>
+							<td><a class="btn btn-sm btn-info" href="{% url 'team' i.id %}">View</a></td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+				<form action="" method="POST">
+					{% csrf_token %}
+					<table class="table table-sm">
+						{{ form }}
+					</table>
+					<input type="submit" name="Submit">
+				</form>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<br>
+{% endblock %}

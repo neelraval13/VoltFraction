@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -10,32 +11,28 @@ from .filters import *
 from django.views.decorators.csrf import csrf_exempt
 
 
-# def createTier(request, pk):
-
-# 	OrderFormSet = inlineformset_factory(University, Member, fields = ('game','tierlist','played','won'), extra=3)
-# 	member = Member.objects.get(id=pk)
-# 	formset = OrderFormSet(queryset=Tier.objects.none(),instance = member)
-# 	#form = GameForm(initial={'member':member})
-# 	if request.method == 'POST':
-# 		formset = OrderFormSet(request.POST,instance = member)
-# 		if formset.is_valid():
-# 			formset.save()
-# 			pk_test = member.id
-# 			return redirect('profile',pk_test=pk_test)
-
-	# context = {'formset':formset}
-	# return render(request, 'accounts/forms.html', context)
-
-@csrf_exempt
-def ajax(request):
+def Apply(request):
 	
-	profile = Profile.objects.get(user=request.user)
-	profile.is_apply = True;
+	profile = Profile.objects.get(id = request.POST.get('profile_id'))
+	profile.is_apply=True
 	profile.save()
-	print("Hello")
-	resp = json.dumps(profile)
-	return HttpResponse(resp, conten_type="application/json")
+	return HttpResponseRedirect(reverse('home'))
 
+def Approve(request):
+	
+	profile = Profile.objects.get(id = request.POST.get('profile_id'))
+	profile.is_apply=False
+	profile.is_lead=True
+	profile.save()
+	return HttpResponseRedirect(reverse('home'))
+
+def Delete(request):
+	
+	profile = Profile.objects.get(id = request.POST.get('profile_id'))
+	profile.is_apply=False
+	profile.is_lead=False
+	profile.save()
+	return HttpResponseRedirect(reverse('home'))
 
 def homePage(request):
 	context ={'homePage':"active"}
@@ -82,11 +79,12 @@ def home(request):
 		if(request.user.is_staff):
 			members= Member.objects.all()
 		else:
-			members = Member.objects.filter(college = request.user.first_name)
+			members = Member.objects.filter(college = request.user.profile.college)
 		games = Game.objects.all()
-		announcements = Announcement.objects.all()
+		tournament = Tournament.objects.all()
+		leads = Profile.objects.filter(is_apply=True,is_lead=False)
 
-		q = {'members':members, 'games':games, 'announcements':announcements, 'home':"active"}
+		q = {'members':members, 'games':games,'tournament': tournament , 'leads':leads,'home':"active"}
 		return render(request,'accounts/dashboard.html', q);
 	else:
 		return loginPage(request=request)
@@ -102,7 +100,7 @@ def members(request):
 	if(request.user.is_staff):
 		members= Member.objects.all()
 	else:
-		members = Member.objects.filter(college = request.user.first_name)
+		members = Member.objects.filter(college = request.user.profile.college)
 	context = {'members':members, 'member_page':"active"}
 	return render(request,'accounts/members.html',context);
 
@@ -118,11 +116,11 @@ def profile(request, pk_test):
 def userprofile(request, pk_test):
 	user = User.objects.get(id=pk_test)
 	profile = Profile.objects.get(user=user)
-	members = Member.objects.filter(college=user.first_name)
+	members = Member.objects.filter(college=profile.college)
 	
 
 
-	context = {'user': user, 'profile':profile, 'members': members}
+	context = {'user': user, 'profile':profile, 'members': members, 'var':"active"}
 	return render(request,'accounts/userprofile.html',context);
 
 def updateuser(request, pk_test):
@@ -181,9 +179,9 @@ def deleteTier(request,pk_item):
 	return render(request, 'accounts/delete.html', context)
 
 def newGame(request):
-	form = GameForm()
+	form = GamesForm()
 	if request.method == 'POST':
-		form = GameForm(request.POST)
+		form = GamesForm(request.POST)
 		if form.is_valid():
 			form.save()
 			return redirect('/')
@@ -192,7 +190,8 @@ def newGame(request):
 	return render(request, 'accounts/add_game.html', context)
 
 def newMember(request):
-	college = request.user.first_name
+	profile = Profile.objects.get(user=request.user)
+	college = profile.college
 	form = MemberForm(initial={'college':college})
 	if request.method == 'POST':
 		form = MemberForm(request.POST)
@@ -213,3 +212,69 @@ def deleteMember(request,pk_member):
 
 	context={'member':member}
 	return render(request, 'accounts/delete_member.html', context)
+
+
+def teamlist(request):
+	team = Team.objects.all()
+
+	context={'team':team, 'teamlist':"active"}
+	return render(request, 'accounts/teamlist.html', context)
+
+
+def team(request,pk):
+	team = Team.objects.get(id=pk)
+
+	context={'team':team,}
+	return render(request, 'accounts/team.html', context)
+
+
+def addTeam(request):
+	form = TeamForm()
+	if request.method == 'POST':
+		form = TeamForm(request.POST)
+		if form.is_valid():
+			form.save(request)
+			return redirect('teamlist')
+	context = {'form': form,}
+
+	return render(request, 'accounts/addteam.html', context)
+
+def addTournament(request):
+	form = TournamentForm()
+	if request.method == 'POST':
+		form = TournamentForm(request.POST)
+		if form.is_valid():
+			form.save(request)
+			return redirect('home')
+	context = {'form': form,}
+
+	return render(request, 'accounts/newTourn.html', context)
+
+def Tourn(request, pk):
+	tournament = Tournament.objects.get(id=pk)
+	form = AddTeamForm(instance=tournament)
+	if request.method == 'POST':
+		form = AddTeamForm(request.POST, instance=tournament)
+		if form.is_valid():
+			form.save(request)
+			tournament.is_add= not tournament.is_add
+			tournament.save()
+			return redirect('tournament',pk=tournament.id)
+	context = {'tourn': tournament,'form':form}
+	return render(request, 'accounts/tournament.html', context)
+
+def AddT(request):
+	
+	id = request.POST.get('pk')
+	tourn = Tournament.objects.get(id = id)
+	tourn.is_add= not tourn.is_add
+	tourn.save()
+	return HttpResponseRedirect(reverse('tournament', args=[id]))
+
+def DelTourn(request,pk):
+	tourn=Tournament.objects.get(id=pk)
+	if request.method == "POST":
+		tourn.delete()
+		return redirect('home')
+	context = {}
+	return render(request, 'accounts/home.html', context)

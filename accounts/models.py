@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+import uuid
 
 # Create your models here.
 
@@ -48,13 +49,11 @@ class Member(models.Model):
 	college = models.CharField(max_length=200, null=True)
 	email = models.EmailField(max_length=255, null=True,unique=True)
 	phone = models.CharField(max_length=200, null=True, unique = True)
+	mem_id=models.UUIDField(unique=True, default=uuid.uuid4, editable=False) #want to generate new unique id from this field
+
 
 	date_created = models.DateTimeField(auto_now_add=True, null=True)
 
-	@classmethod
-	def create(self, name, email=None, college=None, phone=None):
-		member=self(name=name, email=email, college=college,phone=phone)
-		return member
 
 	def __str__(self):
 		return self.name
@@ -69,6 +68,8 @@ class Member(models.Model):
 
 # 	def __str__(self):
 # 		return self.name
+
+
 
 class Tier(models.Model):
 	TIER = (
@@ -88,13 +89,31 @@ class Tier(models.Model):
 		return tier
 
 
-
-class Announcement(models.Model):
-	typ = models.CharField(max_length=200, null=True)
+class Team(models.Model):
 	name = models.CharField(max_length=200, null=True)
-	description = models.CharField(max_length=200, null=True)
-
-	date_created = models.DateTimeField(auto_now_add=True, null=True)
+	game = models.ForeignKey(Game, null=True, on_delete=models.CASCADE)
+	members = models.ManyToManyField(Member)
 
 	def __str__(self):
 		return self.name
+
+class Tournament(models.Model):
+	name = models.CharField(max_length=200, null=True)
+	game = models.ForeignKey(Game, null=True, on_delete=models.CASCADE)
+	date_created = models.DateTimeField(auto_now_add=True, null=True)
+	date = models.DateField(null=True)
+	teams = models.ManyToManyField(Team)
+	is_add = models.BooleanField(default=False)
+
+	def __str__(self):
+		return self.name
+
+
+class Winners(models.Model):
+	tournament = models.ForeignKey(Tournament, null=True, on_delete=models.CASCADE)
+	winner = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.name
+
+	
