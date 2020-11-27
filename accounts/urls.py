@@ -27,7 +27,19 @@ urlpatterns = [
     path('hierarchy/', views.hierarchy, name="hierarchy"),
     path('userprofile/<str:pk_test>/', views.userprofile, name="userprofile"),
     path('updateuser/<str:pk_test>/', views.updateuser, name="updateuser"),
-    url(r'^apply/$', views.ajax, name='ajax_apply')
+
+    path('teamlist/', views.teamlist, name="teamlist"),
+    path('addteam/', views.addTeam, name="addteam"),
+    path('team/<str:pk>/', views.team, name="team"),
+
+    path('addtournament/', views.addTournament, name="addtournament"),
+    path('tournament/<str:pk>', views.Tourn, name="tournament"),
+    path('addt/', views.AddT, name="addt"),
+    path('deletetournament/<str:pk>', views.DelTourn, name="deleteTourn"),
+
+    path('apply/', views.Apply, name='apply'),
+    path('approve/', views.Approve, name='approve'),
+    path('delete/', views.Delete, name='delete'),
 
 ]
 
